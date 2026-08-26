@@ -1,0 +1,128 @@
+{
+  "spoilage_model": {
+    "raw_input_features": [
+      "category",
+      "food_category",
+      "shelf_life_days",
+      "weekday_received",
+      "is_holiday",
+      "is_promoted",
+      "qty_received",
+      "trailing_mean_7",
+      "trailing_mean_28",
+      "demand_cv_28",
+      "no_trailing_demand_28",
+      "snap_days_in_life",
+      "event_days_in_life"
+    ],
+    "categorical_columns_one_hot_encoded": [
+      "category",
+      "food_category",
+      "weekday_received"
+    ],
+    "encoded_feature_names_in_order": [
+      "shelf_life_days",
+      "is_holiday",
+      "is_promoted",
+      "qty_received",
+      "trailing_mean_7",
+      "trailing_mean_28",
+      "demand_cv_28",
+      "no_trailing_demand_28",
+      "snap_days_in_life",
+      "event_days_in_life",
+      "category_FOODS_2",
+      "category_FOODS_3",
+      "food_category_Beverages",
+      "food_category_Condiments_Sauces_Canned_Goods",
+      "food_category_Dairy_Products_Eggs",
+      "food_category_Deli_Prepared_Foods",
+      "food_category_Meat",
+      "food_category_Poultry",
+      "food_category_Produce",
+      "food_category_Seafood",
+      "food_category_Shelf_Stable_Foods",
+      "weekday_received_Monday",
+      "weekday_received_Saturday",
+      "weekday_received_Sunday",
+      "weekday_received_Thursday",
+      "weekday_received_Tuesday",
+      "weekday_received_Wednesday"
+    ],
+    "n_features": 27,
+    "column_name_cleaning_rule": "non-alphanumeric/underscore characters replaced with '_' (see reconstruct.py's _clean() regex)",
+    "prediction_threshold": 0.4,
+    "preprocessing_object": null,
+    "preprocessing_note": "No standalone fitted preprocessing object (no sklearn ColumnTransformer/OneHotEncoder) exists in reconstruct.py -- encoding is done directly with pandas get_dummies(drop_first=True) on categorical_columns_one_hot_encoded, then the result is reindexed to encoded_feature_names_in_order with fill_value=0 (exactly how reconstruct.py aligns X_test to X_train's columns). There is nothing else to serialize for this step beyond the column list above -- a placeholder preprocessor.pkl would be fictitious and was deliberately NOT created."
+  },
+  "demand_model": {
+    "raw_input_features": [
+      "lag_1",
+      "lag_7",
+      "lag_14",
+      "roll_mean_7",
+      "roll_mean_28",
+      "month",
+      "day_of_week",
+      "category"
+    ],
+    "categorical_columns_one_hot_encoded": [
+      "category",
+      "day_of_week"
+    ],
+    "encoded_feature_names_in_order": [
+      "lag_1",
+      "lag_7",
+      "lag_14",
+      "roll_mean_7",
+      "roll_mean_28",
+      "month",
+      "category_FOODS_2",
+      "category_FOODS_3",
+      "day_of_week_Monday",
+      "day_of_week_Saturday",
+      "day_of_week_Sunday",
+      "day_of_week_Thursday",
+      "day_of_week_Tuesday",
+      "day_of_week_Wednesday"
+    ],
+    "n_features": 14,
+    "lag_features_required": [
+      "lag_1",
+      "lag_7",
+      "lag_14"
+    ],
+    "rolling_features_required": [
+      "roll_mean_7 (7-day rolling mean of total_demand, shifted 1 day)",
+      "roll_mean_28 (28-day rolling mean of total_demand, shifted 1 day)"
+    ],
+    "preprocessing_object": null,
+    "preprocessing_note": "Same situation as the spoilage model: pandas get_dummies + reindex, no standalone fitted preprocessor exists or was fabricated."
+  },
+  "risk_engine_constants": {
+    "chronological_split_cutoff": "2016-02-01 00:00:00",
+    "risk_score_formula": {
+      "zero_exposure_case": "risk_score = spoilage_probability * 20  (applied when expected_waste_exposure == 0)",
+      "nonzero_exposure_case": "risk_score = 20 + 80 * percentile_rank(expected_waste_exposure among rows where it is nonzero)"
+    },
+    "risk_level_bins": {
+      "LOW": "risk_score in (-0.01, 25]",
+      "MEDIUM": "(25, 50]",
+      "HIGH": "(50, 75]",
+      "CRITICAL": "(75, 100]"
+    }
+  },
+  "item_category_lookup": {
+    "artifact": "item_share_lookup.parquet (or .csv)",
+    "columns": [
+      "item_avg_daily_demand",
+      "category",
+      "category_avg_daily_demand",
+      "item_share_of_category"
+    ],
+    "index": "item_id",
+    "purpose": "Scales the demand model's category-level forecast down to an item-level rate: item_forecast_daily_demand = category_forecast_daily_demand * item_share_of_category. Computed from real TRAINING-period data only (no test-set leakage).",
+    "important_caveat": "This lookup only has entries for items present in the original training period. It is NOT a general-purpose artifact for arbitrary future/company item_ids -- an item with no training history has no entry here, and item_share_of_category would be NaN for it. This is a real limitation of the frozen pipeline for company-data generalization, not an export defect."
+  },
+  "category_forecast_lookup_NOTE": "reconstruct.py also builds an in-memory (date, category) -> forecasted daily demand lookup (`cat_forecast_lookup`). This is DELIBERATELY NOT exported as a deployment artifact: it is a snapshot of the demand model's own predictions over the specific historical date range used in this run, not a reusable general inference artifact. For genuinely new (future or company) dates, the correct procedure is to engineer fresh demand features for those dates and call the reloaded demand_model.predict() directly -- never to look up historical predictions in this table."
+}

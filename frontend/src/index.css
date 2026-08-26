@@ -1,0 +1,100 @@
+@import "tailwindcss";
+
+/* ============================================================
+   VENTORA design tokens
+   Derived 1:1 from the original Streamlit app's BRAND config,
+   extended with semantic roles (surface/border/text/status) and
+   the RISK_COLORS mapping. No new brand hues invented.
+   ============================================================ */
+@theme {
+  --font-display: "Manrope", "Segoe UI", sans-serif;
+  --font-body: "Inter", "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  /* Brand core (from app.py BRAND dict) */
+  --color-deep-forest: #003020;
+  --color-intelligence-green: #005030;
+  --color-brand-green: #2e7926;
+  --color-signature-lime: #c2e700;
+  --color-off-white: #f5f8f3;
+  --color-white: #ffffff;
+  --color-muted-gray: #82908a;
+  --color-ink: #050807;
+
+  /* Semantic surface roles */
+  --color-bg: var(--color-off-white);
+  --color-surface: var(--color-white);
+  --color-surface-sunken: #eef2ec;
+  --color-border: #dde6df;
+  --color-border-strong: #c7d4cc;
+
+  /* Semantic text roles */
+  --color-text: #0c1c15;
+  --color-text-muted: var(--color-muted-gray);
+  --color-text-on-dark: var(--color-off-white);
+  --color-text-on-dark-muted: #a9c2b4;
+
+  /* Sidebar / dark surface */
+  --color-sidebar: var(--color-deep-forest);
+  --color-sidebar-hover: #0a4534;
+  --color-sidebar-active: #0f5a41;
+  --color-sidebar-border: #114533;
+
+  /* Status */
+  --color-success: #2e9b62;
+  --color-warning: #e3b93f;
+  --color-danger: #c83c32;
+
+  /* Risk levels — semantically locked, same as app.py RISK_COLORS */
+  --color-risk-low: #2e9b62;
+  --color-risk-medium: #e3b93f;
+  --color-risk-high: #e47a32;
+  --color-risk-critical: #c83c32;
+
+  --shadow-card: 0 1px 2px rgba(5, 8, 7, 0.04), 0 4px 16px rgba(5, 8, 7, 0.05);
+  --shadow-card-hover: 0 2px 4px rgba(5, 8, 7, 0.06), 0 8px 28px rgba(5, 8, 7, 0.08);
+}
+
+@layer base {
+  html {
+    font-family: var(--font-body);
+    color: var(--color-text);
+    background: var(--color-bg);
+  }
+
+  body {
+    min-height: 100dvh;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+  }
+
+  ::selection {
+    background: var(--color-signature-lime);
+    color: var(--color-deep-forest);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brand-green);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  .tabular-figures {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+}

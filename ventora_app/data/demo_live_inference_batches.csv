@@ -1,0 +1,7 @@
+batch_id,item_id,category,food_category,shelf_life_days,weekday_received,is_holiday,is_promoted,qty_received,trailing_mean_7,trailing_mean_28,demand_cv_28,no_trailing_demand_28,snap_days_in_life,event_days_in_life,current_inventory,days_until_expiry
+DEMO_001,FOODS_2_014,FOODS_2,Dairy_Products_Eggs,10,Monday,0,0,60,9.0,8.5,0.25,1,0,0,60,8
+DEMO_002,FOODS_2_101,FOODS_2,Beverages,30,Thursday,0,1,200,2.0,2.2,0.55,0,1,0,200,28
+DEMO_003,FOODS_3_045,FOODS_3,Produce,5,Saturday,0,0,40,7.5,7.0,0.3,0,0,0,40,3
+DEMO_004,FOODS_3_210,FOODS_3,Seafood,3,Tuesday,1,0,25,1.2,1.5,0.6,0,1,0,25,1
+DEMO_005,FOODS_3_502,FOODS_3,Meat,6,Wednesday,0,0,90,3.0,3.4,0.4,0,0,0,90,4
+DEMO_006,FOODS_2_260,FOODS_2,Condiments_Sauces_Canned_Goods,60,Sunday,0,0,150,0.5,0.6,0.7,0,0,0,150,58

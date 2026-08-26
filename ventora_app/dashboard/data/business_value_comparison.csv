@@ -1,0 +1,4 @@
+Scenario,Baseline Waste Units,AI-Assisted Waste Units,Waste Reduction %,Baseline Spoilage Rate,AI-Assisted Spoilage Rate,Spoilage Rate Reduction (pp),Intervention Count (HIGH+CRITICAL),Estimated Remaining Waste
+Conservative,36448.0,31741.7,12.91,0.3662,0.36,0.62,6587,31741.7
+Base,36448.0,28245.7,22.5,0.3662,0.3533,1.29,6587,28245.7
+Optimistic,36448.0,25495.0,30.05,0.3662,0.3435,2.27,6587,25495.0

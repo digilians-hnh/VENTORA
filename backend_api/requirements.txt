@@ -1,0 +1,29 @@
+# VENTORA API (backend_api/) -- thin FastAPI wrapper around the existing,
+# frozen ventora_app/ analytics pipeline. Phase 1 scope only: /api/health,
+# /api/summary, /api/risk-df, /api/recommendations, /api/business-value,
+# /api/metadata. No inference endpoint yet -- lightgbm/xgboost/pyarrow are
+# therefore not required for Phase 1, but pandas needs a parquet engine if
+# ventora_app's own item_share_lookup.parquet is ever read from this
+# service in a later phase.
+fastapi>=0.110
+uvicorn[standard]>=0.29
+pydantic>=2.6
+pandas>=2.0
+python-multipart>=0.0.9
+
+# Phase 3: live scoring reuses the frozen ventora_app inference layer, so
+# these match ventora_app/requirements.txt's own pins for that layer.
+lightgbm>=4.0
+xgboost>=2.0
+joblib>=1.3
+pyarrow>=14.0
+# scikit-learn is an implicit dependency of unpickling the frozen models
+# (not pinned in ventora_app/requirements.txt). This environment's models
+# were pickled with scikit-learn 1.6.1; a newer scikit-learn loads them
+# fine but prints an InconsistentVersionWarning. Pin to silence it if that
+# matters for your deployment -- not required for correctness.
+# scikit-learn==1.6.1
+
+# Testing
+pytest>=8.0
+httpx>=0.27
