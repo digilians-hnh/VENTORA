@@ -37,11 +37,16 @@ DEMO_CATEGORY_DEMAND_PATH = DATA_DIR / "demo_live_inference_category_demand.csv"
 
 RISK_LEVELS_ORDER = ["LOW", "MEDIUM", "HIGH", "CRITICAL"]
 
-# CORS: local React dev servers only, for now. Widen/lock down per
-# environment when the frontend is actually deployed -- not decided here.
+# CORS: local development + deployed frontend.
+# Production frontend URL can be supplied through FRONTEND_URL.
+FRONTEND_URL = os.environ.get("FRONTEND_URL", "").strip()
+
 CORS_ALLOW_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
     "http://localhost:3000",
     "http://127.0.0.1:3000",
 ]
+
+if FRONTEND_URL:
+    CORS_ALLOW_ORIGINS.append(FRONTEND_URL.rstrip("/"))
